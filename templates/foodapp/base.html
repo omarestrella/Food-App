@@ -3,12 +3,12 @@
     <title>Food Ordering</title>
 
     <!-- Skeleton -->
-    <style rel="stylesheet" href="{{ STATIC_URL }}css/base.css" />
-    <style rel="stylesheet" href="{{ STATIC_URL }}css/layout.css" />
-    <style rel="stylesheet" href="{{ STATIC_URL }}css/skeleton.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/base.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/layout.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/skeleton.css" />
 
     <!-- Custom -->
-    <style rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
 
     {% block extracss %}{% endblock extracss %}
 
@@ -16,6 +16,15 @@
 </head>
 <body>
     <div class="container">
-        
+        <div class="three columns">
+            <nav>
+                <h3>Menu</h3>
+            </nav>
+        </div>
+
+        <div class="twelve columns offset-by-one">
+            {% block content %}{% endblock content %}
+        </div>
+    </div>
 </body>
 </html>
