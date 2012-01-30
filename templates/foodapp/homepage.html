@@ -2,5 +2,23 @@
 
 {% block content %}
 <h1>Place your order</h1>
-{{ form.as_p }}
+<form id="order_form" method="post" target="">
+    {% csrf_token %}
+    {% if form.errors %}
+        <ul>
+            {% for field in form %}
+                {% if field.errors %}
+                    <li class="errorlist">{{ field.label }}: {{ field.errors|first }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% for field in form %}
+    <label for="id_{{ field.name }}">{{ field.label }}</label>
+    {{ field }}
+    {% endfor %}
+
+    <input type="submit" value="Place Order" />
+</form>
 {% endblock content %}

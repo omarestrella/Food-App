@@ -15,8 +15,8 @@ class Order(models.Model):
     user = models.ForeignKey(User)
     date = models.DateField(default=datetime.date.today)
     item = models.ForeignKey(Item)
-    quantity = models.PositiveSmallIntegerField()
-    guests = models.PositiveSmallIntegerField()
+    quantity = models.PositiveSmallIntegerField(default=1)
+    guests = models.PositiveSmallIntegerField(default=0)
 
     def __str__(self):
         return "%s on %s with %s guests" % (self.user.username, self.date, self.guests)
