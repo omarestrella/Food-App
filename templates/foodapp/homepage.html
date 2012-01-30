@@ -2,6 +2,9 @@
 
 {% block content %}
 <h1>Place your order</h1>
+{% if error %}
+<h3 class="errorlist">{{ error }}</h3>
+{% endif %}
 <form id="order_form" method="post" target="">
     {% csrf_token %}
     {% if form.errors %}

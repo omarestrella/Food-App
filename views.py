@@ -1,14 +1,15 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.views.generic import CreateView, ListView
-
-import datetime
+from django.http import HttpResponseRedirect
+from django.utils.functional import lazy
+from django.core.urlresolvers import reverse
 
 from models import Item, Order
 from forms import OrderForm
 
-from django.utils.functional import lazy
-from django.core.urlresolvers import reverse
 # Workaround for using reverse with success_url in class based generic views
 # because direct usage of it throws an exception.
 reverse_lazy = lambda name=None, *args : lazy(reverse, str)(name, args=args)
@@ -23,19 +24,28 @@ class HomepageView(CreateView):
         form = OrderForm(request.POST)
 
         if form.is_valid():
-            self.object = form.save(commit=False)
-            item = Item.objects.get(pk=request.POST.get("item"))
+            obj = form.save(commit=False)
+            item_pk = request.POST.get('item', None)
 
-            if item.once_a_day:
-                try:
-                    ordered = Order.objects.filter(user=request.user).get(item__pk=request.POST.get("item"), date=datetime.date.today)
-                except Order.DoesNotExist:
-                    return self.render_to_response(self.get_context_data(form=form))
-                
-                if ordered:
-                    return self.render_to_response(self.get_context_data({"form": form, "error": "This item has already been ordered"}))
+            if item_pk is not None:
+                item = Item.objects.get(pk=item_pk)
             else:
-                return self.render_to_response(self.get_context_data(form=form))
+                raise AttributeError('Could not locate item with pk %s' % item_pk)
+
+            if item and item.once_a_day:
+                order = None
+
+                try:
+                    order = Order.objects.filter(user=request.user).get(item__pk=item_pk, date=datetime.date.today)
+                    return self.render_to_response(self.get_context_data({"form": form, "error": "This item has already been ordered"}))
+                except Order.DoesNotExist:
+                    obj.user = request.user
+                    obj.save()
+                    return HttpResponseRedirect(self.success_url)
+            else:
+                obj.user = request.user
+                obj.save()
+                return HttpResponseRedirect(self.success_url)
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
