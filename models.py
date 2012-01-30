@@ -14,7 +14,7 @@ class Item(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User)
     date = models.DateField(default=datetime.date.today)
-    item = models.ManyToManyField(Item)
+    item = models.ForeignKey(Item)
     quantity = models.PositiveSmallIntegerField()
     guests = models.PositiveSmallIntegerField()
 

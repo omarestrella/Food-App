@@ -1,10 +1,6 @@
 {% extends 'foodapp/base.html' %}
 
 {% block content %}
-<h1>Order items</h1>
-<ul>
-    {% for item in items %}
-    <li>{{ items }}</li>
-    {% endfor %}
-</ul>
+<h1>Place your order</h1>
+{{ form.as_p }}
 {% endblock content %}

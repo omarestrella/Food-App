@@ -1,9 +1,8 @@
-from django.conf.urls.defaults import patterns, include
-import views
+from django.conf.urls.defaults import url, patterns, include
 
-from views import HomepageView
+from views import HomepageView, OrderListView
 
-urlpatterns = ('',
-    (r'^', views.HomepageView.as_view(), name='url_homepage'),
-    (r'^', views.ItemListView.as_view(), name='url_items')
+urlpatterns = (
+    url(r'^', HomepageView.as_view(), name='url_homepage'),
+    url(r'^order/$', OrderListView.as_view(), name='url_orders'),
 )

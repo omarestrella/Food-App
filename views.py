@@ -6,11 +6,11 @@ from models import Item, Order
 from forms import OrderForm
 
 class HomepageView(CreateView):
-    template_name = 'foodapp/placeOrder.html'
-    form_class = forms.OrderForm
+    form_class = OrderForm
     success_url = 'foodapp/order.html'
+    template_name = 'foodapp/homepage.html'
 
 class OrderListView(ListView):
-    template_name = 'foodapp/orders.html'
     model = Order
     context_object_name = 'orders'
+    template_name = 'foodapp/orders.html'
