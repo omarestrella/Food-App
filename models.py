@@ -7,6 +7,9 @@ class Item(models.Model):
     description = models.CharField(max_length=256)
     once_a_day = models.BooleanField()
 
+    def __unicode__(self):
+        return '%s: %s' % (self.name, self.description,)
+
     class Meta:
         verbose_name = "Item"
         verbose_name_plural = "Items"
