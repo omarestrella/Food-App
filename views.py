@@ -16,7 +16,7 @@ reverse_lazy = lambda name=None, *args : lazy(reverse, str)(name, args=args)
 
 class HomepageView(CreateView):
     form_class = OrderForm
-    success_url = reverse_lazy('url_orders')
+    success_url = reverse_lazy('url_todays_orders')
     template_name = 'foodapp/homepage.html'
     object = Order
 
@@ -37,7 +37,7 @@ class HomepageView(CreateView):
 
                 try:
                     order = Order.objects.filter(user=request.user).get(item__pk=item_pk, date=datetime.date.today)
-                    return self.render_to_response(self.get_context_data({"form": form, "error": "This item has already been ordered"}))
+                    return self.render_to_response(self.get_context_data(form=form, error='This item has already been ordered'))
                 except Order.DoesNotExist:
                     obj.user = request.user
                     obj.save()
@@ -53,3 +53,15 @@ class OrderListView(ListView):
     model = Order
     context_object_name = 'orders'
     template_name = 'foodapp/orders.html'
+
+class UserOrderView(OrderListView):
+    def get_queryset(self):
+        username = self.kwargs.get('username', None)
+
+        if username is not None:
+            return Order.objects.filter(user__username=username)
+
+class TodaysOrdersView(OrderListView):
+    def get_queryset(self):
+        return Order.objects.filter(date=datetime.date.today)
+
