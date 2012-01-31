@@ -61,7 +61,17 @@ class UserOrderView(OrderListView):
         if username is not None:
             return Order.objects.filter(user__username=username)
 
+    def get_context_data(self, **kwargs):
+        context = super(UserOrderView, self).get_context_data(**kwargs)
+        context['title'] = 'Order History'
+        return context
+
 class TodaysOrdersView(OrderListView):
     def get_queryset(self):
         return Order.objects.filter(date=datetime.date.today)
+    
+    def get_context_data(self, **kwargs):
+        context = super(TodaysOrdersView, self).get_context_data(**kwargs)
+        context['title'] = 'Today\'s Orders'
+        return context
 

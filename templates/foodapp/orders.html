@@ -1,11 +1,19 @@
 {% extends 'foodapp/base.html' %}
 
 {% block content %}
-<h1>Orders</h1>
+{% if title %}
+<h1>{{ title }}</h1>
+{% else %}
+<h1>Order History</h1>
+{% endif %}
 {% if error %}
 <h4 class="errorlist">{{ error }}</h4>
 {% endif %}
-{% for order in orders %}
-<h4>{{ order }} <span style="font-size: .7em">by {{ order.user }}</span></h4>
-{% endfor %}
+{% if orders %}
+    {% for order in orders %}
+    <h4>{{ order }} <span style="font-size: .7em">by {{ order.user }}</span></h4>
+    {% endfor %}
+{% else %}
+    <h4>No orders today :(</h4>
+{% endif %}
 {% endblock content %}
