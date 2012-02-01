@@ -1,8 +1,9 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, TemplateView
 from django.http import HttpResponseRedirect
 from django.utils.functional import lazy
 from django.core.urlresolvers import reverse
@@ -19,6 +20,10 @@ class HomepageView(CreateView):
     success_url = reverse_lazy('url_todays_orders')
     template_name = 'foodapp/homepage.html'
     object = Order
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(HomepageView, self).dispatch(*args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         form = OrderForm(request.POST)
@@ -54,7 +59,15 @@ class OrderListView(ListView):
     context_object_name = 'orders'
     template_name = 'foodapp/orders.html'
 
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(OrderListView, self).dispatch(*args, **kwargs)
+
 class UserOrderView(OrderListView):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(UserOrderView, self).dispatch(*args, **kwargs)
+    
     def get_queryset(self):
         username = self.kwargs.get('username', None)
 
@@ -67,6 +80,10 @@ class UserOrderView(OrderListView):
         return context
 
 class TodaysOrdersView(OrderListView):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(TodaysOrdersView, self).dispatch(*args, **kwargs)
+    
     def get_queryset(self):
         return Order.objects.filter(date=datetime.date.today)
     
@@ -74,4 +91,3 @@ class TodaysOrdersView(OrderListView):
         context = super(TodaysOrdersView, self).get_context_data(**kwargs)
         context['title'] = 'Today\'s Orders'
         return context
-
