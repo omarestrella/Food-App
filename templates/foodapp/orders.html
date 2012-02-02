@@ -6,6 +6,11 @@
 {% else %}
 <h1>Order History</h1>
 {% endif %}
+{% if counts %}
+    {% for key, value in counts %}
+        <p><h3>{{ key }}:</h3> {{ value }}</p>
+    {% endfor %}
+{% endif %}
 {% if error %}
 <h4 class="errorlist">{{ error }}</h4>
 {% endif %}

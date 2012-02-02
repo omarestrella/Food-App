@@ -76,7 +76,7 @@ class UserOrderView(OrderListView):
 
     def get_context_data(self, **kwargs):
         context = super(UserOrderView, self).get_context_data(**kwargs)
-        context['title'] = 'Order History'
+        context['title'] = 'Order History for ' + self.request.user.username
         return context
 
 class TodaysOrdersView(OrderListView):

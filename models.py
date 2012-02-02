@@ -19,12 +19,11 @@ class Order(models.Model):
     date = models.DateField(default=datetime.date.today)
     item = models.ForeignKey(Item)
     quantity = models.PositiveSmallIntegerField(default=1)
-    guests = models.PositiveSmallIntegerField(default=0)
 
     def __unicode__(self):
-        return "%s on %s with %s guests" % (self.item.name, self.date, self.guests,)
+        return "%d %s(s) on %s."% (self.quantity, self.item.name, self.date,)
     
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Orders"
-        ordering = ["-date"]
+        ordering = ["date"]
