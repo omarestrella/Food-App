@@ -84,10 +84,17 @@ class TodaysOrdersView(OrderListView):
     def dispatch(self, *args, **kwargs):
         return super(TodaysOrdersView, self).dispatch(*args, **kwargs)
     
-    def get_queryset(self):
-        return Order.objects.filter(date=datetime.date.today)
-    
     def get_context_data(self, **kwargs):
         context = super(TodaysOrdersView, self).get_context_data(**kwargs)
+        orders = Order.objects.filter(date=datetime.date.today)
+        context['orders'] = orders
+
+        # The following piece of code is a hackish way to find the # of cups of rice needed
+        burrito_count = 0
+        for order in orders:
+            if order.item.name.strip().lower().find('burrito') > -1:
+                burrito_count = burrito_count + order.quantity
+        context['rice_quantity'] = burrito_count * 0.7
+
         context['title'] = 'Today\'s Orders'
         return context

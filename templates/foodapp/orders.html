@@ -15,6 +15,9 @@
 <h4 class="errorlist">{{ error }}</h4>
 {% endif %}
 {% if orders %}
+    {% if rice_quantity %}
+        <h3>{{ rice_quantity }} cups of rice needed.</h3>
+    {% endif %}
     {% for order in orders %}
     <h4>{{ order }} <span style="font-size: .7em">by {{ order.user }}</span></h4>
     {% endfor %}
