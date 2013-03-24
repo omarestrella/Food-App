@@ -1,5 +1,6 @@
 from django.forms import ModelForm
-from models import Order
+
+from foodapp.models import Order
 
 class OrderForm(ModelForm):
     def __init__(self, *args, **kwargs):

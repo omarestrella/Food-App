@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Food Ordering</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}vendor/bootstrap/css/bootstrap.min.css" />
+
+    <!-- Custom -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css" />
+
+    {% block extracss %}{% endblock extracss %}
+
+    {% block extrajs %}{% endblock extrajs %}
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <a class="brand" href="{% url 'foodapp:url_homepage' %}">foodapp</a>
+                        <ul class="nav">
+                            <li><a href="{% url 'foodapp:url_homepage' %}">Place Order</a></li>
+                            <li><a href="{% url 'foodapp:url_user_orders' username=user %}">My Order History</a></li>
+                            <li><a href="{% url 'foodapp:url_todays_orders' %}">Today's Orders</a></li>
+                        </ul>
+                        <ul class="nav pull-right">
+                            {% if user.is_authenticated %}
+                                <li><a href="#">Logout</a></li>
+                            {% else %}
+                                <li><a href="{% url 'url_login' %}">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block content %}{% endblock content %}
+    </div>
+</body>
+</html>

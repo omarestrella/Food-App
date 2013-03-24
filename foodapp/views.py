@@ -1,23 +1,18 @@
 import datetime
 
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User
-from django.views.generic import CreateView, ListView, TemplateView
 from django.http import HttpResponseRedirect
-from django.utils.functional import lazy
-from django.core.urlresolvers import reverse
+from django.views.generic import CreateView, ListView
+from django.utils.decorators import method_decorator
+from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
-from models import Item, Order
-from forms import OrderForm
+from foodapp.forms import OrderForm
+from foodapp.models import Item, Order
 
-# Workaround for using reverse with success_url in class based generic views
-# because direct usage of it throws an exception.
-reverse_lazy = lambda name=None, *args : lazy(reverse, str)(name, args=args)
 
 class HomepageView(CreateView):
     form_class = OrderForm
-    success_url = reverse_lazy('url_todays_orders')
+    success_url = reverse_lazy('foodapp:url_todays_orders')
     template_name = 'foodapp/homepage.html'
     object = Order
 
@@ -54,6 +49,7 @@ class HomepageView(CreateView):
         else:
             return self.render_to_response(self.get_context_data(form=form))
 
+
 class OrderListView(ListView):
     model = Order
     context_object_name = 'orders'
@@ -63,11 +59,12 @@ class OrderListView(ListView):
     def dispatch(self, *args, **kwargs):
         return super(OrderListView, self).dispatch(*args, **kwargs)
 
+
 class UserOrderView(OrderListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(UserOrderView, self).dispatch(*args, **kwargs)
-    
+
     def get_queryset(self):
         username = self.kwargs.get('username', None)
 
@@ -79,11 +76,12 @@ class UserOrderView(OrderListView):
         context['title'] = 'Order History for ' + self.request.user.username
         return context
 
+
 class TodaysOrdersView(OrderListView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(TodaysOrdersView, self).dispatch(*args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super(TodaysOrdersView, self).get_context_data(**kwargs)
         orders = Order.objects.filter(date=datetime.date.today)
@@ -94,7 +92,7 @@ class TodaysOrdersView(OrderListView):
         for order in orders:
             if order.item.name.strip().lower().find('burrito') > -1:
                 burrito_count = burrito_count + order.quantity
-        context['rice_quantity'] = burrito_count * 0.7
+        context['rice_quantity'] = burrito_count * 0.5
 
         context['title'] = 'Today\'s Orders'
         return context
